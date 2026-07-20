@@ -4,15 +4,15 @@
 import React, { useState } from 'react'
 import HeroSection from './HeroSection'
 import VehicleSlider from './VehicleSlider'
-import AuthModel from './AuthModal'
+import AuthModal from './AuthModal'
 
 function PublicHome() {
     const [authOpen, setAuthOpen] = useState(false)
     return (
         <>
-            <HeroSection />
-            <VehicleSlider />
-            <AuthModel
+            <HeroSection onAuthRequired={()=>setAuthOpen(true)}/>
+            <VehicleSlider/>
+            <AuthModal
                 open={authOpen}
                 onClose={() => setAuthOpen(false)} />
         </>
