@@ -13,7 +13,7 @@ type propType = {
 }
 type stepType = "login" | "signup" | "otp"
 function AuthModal({ open, onClose }: propType) {
-  const [step, setStep] = useState<stepType>("otp")
+  const [step, setStep] = useState<stepType>("login")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -30,6 +30,7 @@ function AuthModal({ open, onClose }: propType) {
       const { data } = await axios.post("/api/auth/register", {
         name, email, password
       })
+      setErr("")
       setStep("otp")
       setLoading(false)
 
@@ -47,6 +48,8 @@ function AuthModal({ open, onClose }: propType) {
         email, otp:otp.join("")
       })
       console.log(data)
+      setOtp(["", "", "", "", "", ""])
+      setErr("")
       setStep("login")
       setLoading(false)
 
@@ -209,8 +212,12 @@ function AuthModal({ open, onClose }: propType) {
                         ))}
                       </div>
 
+                      {err && <p className='text-red-500'>*{err}</p>}
+
+
                       <button 
-                      className='text-white font-semibold hover:bg-gray-900 transition'>Verify and Create Account</button>
+                      className='mt-6 w-full h-11 rounded-xl bg-black text-white font-semibold hover:bg-gray-900 transition flex justify-center items-center'
+                      onClick={handleVerifyEmail}>{!loading ? "Verify OTP and Create Account" : <CircleDashed size={18} color='white' className='animate-spin' />}</button>
 
                     </motion.div>
                   )}
