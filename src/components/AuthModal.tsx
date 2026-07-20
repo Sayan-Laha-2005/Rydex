@@ -40,6 +40,23 @@ function AuthModal({ open, onClose }: propType) {
     }
   }
 
+  const handleVerifyEmail = async () => {
+    setLoading(true)
+    try {
+      const { data } = await axios.post("/api/auth/verify-email", {
+        email, otp:otp.join("")
+      })
+      console.log(data)
+      setStep("login")
+      setLoading(false)
+
+    } catch (error: any) {
+      setLoading(false)
+      setErr(error.response.data.message ?? "something went wromg")
+
+    }
+  }
+
   const handleLogin = async () => {
     setLoading(true)
     const res = await signIn("credentials", {
