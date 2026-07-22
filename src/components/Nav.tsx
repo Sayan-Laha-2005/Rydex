@@ -11,6 +11,7 @@ import { div } from 'motion/react-client';
 import { Bike, Car, ChevronRight, LogOut, Menu, Truck, X } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { setUserData } from '@/redux/userSlice';
+import { useRouter } from 'next/navigation';
 
 const Nav_Items = ["Home", "Booking", "About Us", "Contact"]
 
@@ -21,6 +22,7 @@ function Nav() {
     const [menuOpen, setMenuOpen] = useState(false)
     const { userData } = useSelector((state: RootState) => state.user)
     const dispatch = useDispatch<AppDispatch>()
+    const router=useRouter()
 
     const handleLogOut = async () => {
         await signOut({ redirect: false })
@@ -82,7 +84,7 @@ function Nav() {
                                                     <p className='font-semibold text-lg'>{userData.name}</p>
                                                     <p className='text-xs uppercase text-grey-500 mb-4'>{userData.role}</p>
                                                     {userData.role != "partner" && (
-                                                        <div className='w-full flex items-center gap-3 py-3 hover:bg-gray-100 rounded-xl'>
+                                                        <div className='w-full flex items-center gap-3 py-3 hover:bg-gray-100 rounded-xl' onClick={()=>router.push("/partner/onboarding/vehicle")}>
                                                             <div className='flex -space-x-2'>
                                                                 <div className='w-6 h-6 rounded-full bg-black text-white flex items-center justify-center'><Bike size={14} /></div>
                                                                 <div className='w-6 h-6 rounded-full bg-black text-white flex items-center justify-center'><Car size={14} /></div>
@@ -211,7 +213,7 @@ function Nav() {
                                 <p className='font-semibold text-lg'>{userData.name}</p>
                                 <p className='text-xs uppercase text-grey-500 mb-4'>{userData.role}</p>
                                 {userData.role != "partner" && (
-                                    <div className='w-full flex items-center gap-3 py-3 hover:bg-gray-100 rounded-xl'>
+                                    <div className='w-full flex items-center gap-3 py-3 hover:bg-gray-100 rounded-xl' onClick={()=>router.push("/partner/onboarding/vehicle")}>
                                         <div className='flex -space-x-2'>
                                             <div className='w-6 h-6 rounded-full bg-black text-white flex items-center justify-center'><Bike size={14} /></div>
                                             <div className='w-6 h-6 rounded-full bg-black text-white flex items-center justify-center'><Car size={14} /></div>
