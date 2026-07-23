@@ -22,7 +22,7 @@ export async function POST(req: Request) {
             return Response.json({ message: "missing required details" }, { status: 400 })
         }
 
-        if (VEHICLE_REGEX.test(number)) {
+        if (!VEHICLE_REGEX.test(number)) {
             return Response.json({ message: "Invalid Vehicle Number Format" }, { status: 400 })
         }
 
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         }
 
 
-        let vehicle = await Vehicle.findOne({ owner: session.user.id })
+        let vehicle = await Vehicle.findOne({ owner: user._id })
         if (vehicle) {
             vehicle.type = type
             vehicle.number = vehicleNumber
@@ -46,6 +46,7 @@ export async function POST(req: Request) {
             return Response.json(vehicle, { status: 200 })
         }
         vehicle = await Vehicle.create({
+            owner: user._id,
             type,
             number: vehicleNumber,
             vehicleModel
@@ -63,12 +64,14 @@ export async function POST(req: Request) {
 
 
 
-    } catch (error) {
+    } catch (error: any) {
+        console.log("Status:", error.response?.status);
+        console.log("Message:", error.response?.data);
         return Response.json({ message: `vehicle error ${error}` }, { status: 200 })
     }
 }
 
-export async function GET(req:NextRequest) {
+export async function GET(req: NextRequest) {
     try {
         await connectDb()
         const session = await auth()
@@ -80,12 +83,12 @@ export async function GET(req:NextRequest) {
             return Response.json({ message: "user not found" }, { status: 400 })
         }
         let vehicle = await Vehicle.findOne({ owner: user._id })
-        if(vehicle){
+        if (vehicle) {
             return Response.json(vehicle, { status: 200 })
-        }else{
+        } else {
             return null
         }
-        
+
     } catch (error) {
         return Response.json({ message: `get vehicle error ${error}` }, { status: 200 })
     }

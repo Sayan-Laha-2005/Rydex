@@ -1,5 +1,6 @@
 'use client'
-import { ArrowLeft, Bike, Car, Package, Truck } from 'lucide-react'
+import axios from 'axios'
+import { ArrowLeft, Bike, Car, CircleDashed, Package, Truck } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -17,6 +18,21 @@ function page() {
     const [vehicleType, setVehicleType] = useState("")
     const [vehicleNumber,setVehicleNumber]=useState("")
     const [vehicleModel,setVehicleModel]=useState("")
+    const [loading,setLoading]=useState(false)
+    const [error,setError]=useState("")
+    const handleVehicle=async ()=>{
+        setError("")
+        try {
+            setLoading(true)
+            const {data}=await axios.post("/api/partner/onboarding/vehicle",{
+                type:vehicleType,number:vehicleNumber,vehicleModel
+            })
+            setLoading(false)
+        } catch (error:any) {
+            setError(error?.response?.data?.message ?? "something went wrong")
+            setLoading(false)
+        }
+    }
     return (
         <div className='min-h-screen bg-white flex items-center justify-center px-4'>
             <motion.div
@@ -91,7 +107,7 @@ function page() {
                     <div>
                         <label htmlFor="vn" className='text-xs font-semibold text-gray-500'>Vehicle Number</label>
                         <input type="text" 
-                        onChange={(e)=>setVehicleNumber(e.target.value)}
+                        onChange={(e)=>setVehicleNumber(e.target.value.toUpperCase())}
                         value={vehicleNumber}
                         placeholder='WB12AB1234' 
                         id='vn' 
@@ -109,12 +125,15 @@ function page() {
                     </div>
 
                 </div>
+                {error && <p className='text-red-500 mt-4'>*{error}</p>}
 
                 <motion.button
                 whileHover={{ scale:1.02 }}
                 whileTap={{ scale:0.97 }}
+                disabled={loading}
                 className='mt-8 w-full h-14 rounded-2xl bg-black text-white font-semibold flex items-center justify-center gap-2 disabled:opacity-40 transition'
-                >Continue
+                onClick={handleVehicle}
+                >{loading?<CircleDashed className='text-white animate-spin'/>: "Continue"}
 
                 </motion.button>
 

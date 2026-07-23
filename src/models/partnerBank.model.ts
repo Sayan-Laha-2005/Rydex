@@ -34,7 +34,7 @@ const partnerBankSchema=new mongoose.Schema<IPartnerBank>({
         required:true,
         uppercase:true
     },
-    
+
     upi:String,
     
 
@@ -49,6 +49,6 @@ const partnerBankSchema=new mongoose.Schema<IPartnerBank>({
 
 
 
-const PartnerBank=mongoose.models.Vehicle || mongoose.model("PartnerBank",partnerBankSchema)
+const PartnerBank=mongoose.models.PartnerBank || mongoose.model("PartnerBank",partnerBankSchema)
 export default PartnerBank
 
